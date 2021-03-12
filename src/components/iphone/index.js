@@ -117,7 +117,7 @@ export default class Iphone extends Component {
 	ShowFuture = () => {
 		return(
 			<div>
-				{this.state.dailyTArr[1]}
+			
 				<table>
 					<tr>
 						<td>
@@ -147,11 +147,11 @@ export default class Iphone extends Component {
 							<img src = {this.state.dailyIArr[1]}/>
 						</td>
 						<td>
-							{this.state.dailyWSArr[1]}
-							{this.degdirec2(this.state.dailyWDArr[1])}
+							{this.state.dailyWSArr[1]}m/s
+							
 						</td>
 						<td>
-							
+							{this.degdirec2(this.state.dailyWDArr[1])}
 						</td>
 					</tr>
 					<tr>
@@ -231,11 +231,13 @@ export default class Iphone extends Component {
 		// check if temperature data is fetched, if so add the sign styling to the page
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
 		const futuretable = this.ShowFuture();
+		var iconLink = this.state.dailyIArr[0];
 		// display all weather data
 		return (
 			<div class={ style.container }>
 				<div class={ style.header }>
 					<div class={ style.city }>{ this.state.locate }</div>
+					<div>{this.state.display ? null:<img src={iconLink}></img>}</div>
 					<div class={ style.conditions }>{ this.state.cond }</div>
 					<span class={ tempStyles }>{ this.state.temp }</span>
 					<div class={ style.city }>{ this.state.speed }</div>
