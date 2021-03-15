@@ -18,10 +18,16 @@ export default class Iphone extends Component {
 		this.state.temp = "";
 		// button display state
 		this.setState({ display: true });
-		this.setState({dailyTArr:["null","null","null","null","null","null","null"]});
-		this.setState({dailyWSArr:["null","null","null","null","null","null","null"]});
-		this.setState({dailyWDArr:["null","null","null","null","null","null","null"]});
-		this.setState({dailyIArr:["null","null","null","null","null","null","null"]});
+		this.setState({dailyTArr:["null"]});
+		this.setState({dailyWSArr:["null"]});
+		this.setState({dailyWDArr:["null"]});
+		this.setState({dailyIArr:["null"]});
+		this.setState({hourlyTArr:["null"]});
+		this.setState({hourlyWSArr:["null"]});
+		this.setState({hourlyWDArr:["null"]});
+		this.setState({hourlyIArr:["null"]});
+		this.setState({hourlyTimeArr:["null"]});
+		this.setState({dailyTimeArr:["null"]});
 		this.setState({future: false});
 	}
 
@@ -44,7 +50,7 @@ export default class Iphone extends Component {
 	//a call to fetch future weather data
 	fetchWeatherData2 = () => {
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url = "https://api.openweathermap.org/data/2.5/onecall?lat=33.441792&lon=-94.037689&exclude=hourly&units=metric&appid=d6f78e072487f24bf48750fd7a0f66d2";
+		var url = "https://api.openweathermap.org/data/2.5/onecall?lat=33.441792&lon=-94.037689&units=metric&appid=d6f78e072487f24bf48750fd7a0f66d2";
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
@@ -85,43 +91,75 @@ export default class Iphone extends Component {
 		
 	}
 
-	degdirec2 = (dailyWDArr) => {
-		if(dailyWDArr<22.5 && dailyWDArr>337.5){
-			return "N";
-		}
-		else if(dailyWDArr>=22.5 && dailyWDArr<67.5){
-			return "NE"
-		}
-		else if(dailyWDArr>67.5 && dailyWDArr<112.5){
-			return "E"
-		}
-		else if(dailyWDArr>=112.5 && dailyWDArr<157.5){
-			return "SE"
-		}
-		else if(dailyWDArr>157.5 && dailyWDArr<202.5){
-			return "S"
-		}
-		else if(dailyWDArr>=202.5 && dailyWDArr<247.5){
-			return "SW"
-		}
-		else if(dailyWDArr>247.5 && dailyWDArr<292.5){
-			return "W"
-		}
-		else if(dailyWDArr>=292.5 && dailyWDArr<337.5){
-			return "NW"
-		}
-		
+	//converts speed data from m/s to mph
+	//make return values round to 1dp
+	speedConversion = (speed) => {
+		return(
+			speed
+		);
 	}
 
-	//creates table for weather in upcoming days
-	ShowFuture = () => {
+	//creates table for hourly forecasts
+	//convert the data from unix to human date and place in table
+	//use code below to insert time data
+//	<tr>
+//		<td>
+	//		{this.state.hourlyTimeArr[1]}
+	//		{this.state.hourlyTimeArr[2]}
+	//		{this.state.hourlyTimeArr[3]}
+	//		{this.state.hourlyTimeArr[4]}
+//		</td>
+//  </tr>
+	ShowFutureHourly = () => {
 		return(
 			<div>
-			
 				<table>
 					<tr>
 						<td>
-							Day
+						<img src = {this.state.hourlyIArr[1]}/>
+						<img src = {this.state.hourlyIArr[2]}/>
+						<img src = {this.state.hourlyIArr[3]}/>
+						<img src = {this.state.hourlyIArr[4]}/>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{this.state.hourlyTArr[1]}
+							{this.state.hourlyTArr[2]}
+							{this.state.hourlyTArr[3]}
+							{this.state.hourlyTArr[4]}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{this.degdirec(this.state.hourlyWDArr[1])}
+							{this.degdirec(this.state.hourlyWDArr[2])}
+							{this.degdirec(this.state.hourlyWDArr[3])}
+							{this.degdirec(this.state.hourlyWDArr[4])}
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{this.speedConversion(this.state.hourlyWSArr[1])}
+							{this.speedConversion(this.state.hourlyWSArr[2])}
+							{this.speedConversion(this.state.hourlyWSArr[3])}
+							{this.speedConversion(this.state.hourlyWSArr[4])}	
+						</td>
+					</tr>
+				</table>
+			</div>	
+		);
+	}
+
+	//creates table for weather in upcoming days
+	//convert the data from unix to human date and place in table replacing the DAY1 text etc
+	ShowFutureDaily = () => {
+		return(
+			<div>
+				<table class={style.dailyTable}>
+					<tr>
+						<td>
+							Day	
 						</td>
 						<td>
 							Temperature
@@ -130,10 +168,10 @@ export default class Iphone extends Component {
 							
 						</td>
 						<td>
-							Wind Speed
+							Speed
 						</td>
 						<td>
-							Wind Direction
+							Direction
 						</td>
 					</tr>
 					<tr>
@@ -147,11 +185,11 @@ export default class Iphone extends Component {
 							<img src = {this.state.dailyIArr[1]}/>
 						</td>
 						<td>
-							{this.state.dailyWSArr[1]}m/s
+							{this.speedConversion(this.state.dailyWSArr[1])}mph
 							
 						</td>
 						<td>
-							{this.degdirec2(this.state.dailyWDArr[1])}
+							{this.degdirec(this.state.dailyWDArr[1])}
 						</td>
 					</tr>
 					<tr>
@@ -162,13 +200,13 @@ export default class Iphone extends Component {
 							{this.state.dailyTArr[2]}
 						</td>
 						<td>
-							<img src = {this.state.dailyIArr[2]}> </img>
+							<img class = {style.iconDaily} src = {this.state.dailyIArr[2]}> </img>
 						</td>
 						<td>
-							{this.state.dailyWSArr[2]}
+							{this.speedConversion(this.state.dailyWSArr[2])}mph
 						</td>
 						<td>
-							{this.degdirec2(this.state.dailyWDArr[2])}
+							{this.degdirec(this.state.dailyWDArr[2])}
 						</td>
 					</tr>
 					<tr>
@@ -182,10 +220,10 @@ export default class Iphone extends Component {
 							<img src = {this.state.dailyIArr[3]}/>
 						</td>
 						<td>
-							{this.state.dailyWSArr[3]}
+							{this.speedConversion(this.state.dailyWSArr[3])}mph
 						</td>
 						<td>
-							{this.degdirec2(this.state.dailyWDArr[3])}
+							{this.degdirec(this.state.dailyWDArr[3])}
 						</td>
 					</tr>
 					<tr>
@@ -199,10 +237,10 @@ export default class Iphone extends Component {
 							<img src = {this.state.dailyIArr[4]}/>		
 						</td>
 						<td>
-							{this.state.dailyWSArr[4]}
+							{this.speedConversion(this.state.dailyWSArr[4])}mph
 						</td>
 						<td>
-							{this.degdirec2(this.state.dailyWDArr[4])}
+							{this.degdirec(this.state.dailyWDArr[4])}
 						</td>
 					</tr>
 					<tr>
@@ -216,10 +254,10 @@ export default class Iphone extends Component {
 							<img src = {this.state.dailyIArr[5]}/>
 						</td>
 						<td>
-							{this.state.dailyWSArr[5]}
+							{this.state.dailyWSArr[5]}mph
 						</td>
 						<td>
-							{this.degdirec2(this.state.dailyWDArr[5])}
+							{this.degdirec(this.state.dailyWDArr[5])}
 						</td>
 					</tr>
 				</table>
@@ -230,22 +268,25 @@ export default class Iphone extends Component {
 	render() {
 		// check if temperature data is fetched, if so add the sign styling to the page
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
-		const futuretable = this.ShowFuture();
+		const futureHourly = this.ShowFutureHourly();
+		const futureDaily = this.ShowFutureDaily();
 		var iconLink = this.state.dailyIArr[0];
 		// display all weather data
 		return (
 			<div class={ style.container }>
 				<div class={ style.header }>
 					<div class={ style.city }>{ this.state.locate }</div>
-					<div>{this.state.display ? null:<img src={iconLink}></img>}</div>
 					<div class={ style.conditions }>{ this.state.cond }</div>
-					<span class={ tempStyles }>{ this.state.temp }</span>
+					<span class={ tempStyles }>{ this.state.temp }{this.state.display ? null:<img src={iconLink}></img>}</span>
 					<div class={ style.city }>{ this.state.speed }</div>
 					<div class={ style.city }>{this.degdirec(this.state.degree)}</div>
 				</div>
 				<div class={ style.details }></div>
 				<div>
-					{this.state.future? futuretable:null}
+					{this.state.future? futureHourly:null}
+				</div>
+				<div>
+					{this.state.future? futureDaily:null}
 				</div>
 				<div class= { style_iphone.container }> 
 					{ this.state.display ? <Button class={ style_iphone.button } clickFunction={ this.fetchWeatherData }/ > : null }
@@ -281,13 +322,34 @@ export default class Iphone extends Component {
 		var dailyDegree = [];
 		var dailyIcon = [];
 		var dailyIconLink=[];
-		
+		var hourlyTemp = [];
+		var hourlySpeed = [];
+		var hourlyDegree = [];
+		var hourlyIcon = [];
+		var hourlyIconLink= [];
+		var dailyTime=[];
+		var hourlyTime=[];
+
+		//storing data fetched into arrays 	for daily data
+		// I have stored the time data for the data. It is stored in Unix form(dailyTime)
 		for (let i = 0; i < 7; i++) {
 			dailyTemp.push(parsed_json['daily'][i]['temp']['day']);
 			dailySpeed.push(parsed_json['daily'][i]['wind_speed']);
 		 	dailyDegree.push(parsed_json['daily'][i]['wind_deg']);
 			dailyIcon.push(parsed_json['daily'][i]['weather']['0']['icon']);
 			dailyIconLink.push("http://openweathermap.org/img/wn/"+dailyIcon[i]+"@2x.png");
+			dailyTime.push(parsed_json['daily'][i]['dt']);
+			
+		}
+		// storing data into fetched arrays for hourly data
+		// I have stored the time data for the data. It is stored in Unix form(hourlyTime)
+		for (let i =0; i<24; i++){
+			hourlyTemp.push(parsed_json['hourly'][i]['temp']);
+			hourlySpeed.push(parsed_json['hourly'][i]['wind_speed']);
+			hourlyDegree.push(parsed_json['hourly'][i]['wind_deg']);
+			hourlyIcon.push(parsed_json['hourly'][i]['weather']['0']['icon']);
+			hourlyIconLink.push("http://openweathermap.org/img/wn/"+hourlyIcon[i]+"@2x.png");
+			hourlyTime.push(parsed_json['hourly'][i]['dt']);
 		}
 
 		// set states for fields so they could be rendered later on
@@ -296,6 +358,13 @@ export default class Iphone extends Component {
 			dailyWSArr : dailySpeed,
 			dailyWDArr : dailyDegree,
 			dailyIArr :  dailyIconLink,
+			hourlyTArr : hourlyTemp,
+			hourlyWSArr : hourlySpeed,
+			hourlyWDArr : hourlyDegree,
+			hourlyIArr : hourlyIconLink,
+			//use these arrays to use time data
+			dailyTimeArr : dailyTime,
+			hourlyTimeArr : hourlyTime
 
 		});      
 	}
