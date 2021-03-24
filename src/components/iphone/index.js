@@ -210,7 +210,7 @@ export default class Iphone extends Component {
 				<table class={style.dailyTable}>
 					<tr>
 						<td>
-							Day	
+							Days
 						</td>
 						<td>
 							Temperature
