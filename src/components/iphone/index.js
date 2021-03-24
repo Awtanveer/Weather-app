@@ -204,13 +204,14 @@ export default class Iphone extends Component {
 
 	//creates table for weather in upcoming days
 	//convert the data from unix to human date and place in table replacing the DAY1 text etc
+	//Test commit 2, days back to day
 	ShowFutureDaily = () => {
 		return(
 			<div>
 				<table class={style.dailyTable}>
 					<tr>
 						<td>
-							Days
+							Day
 						</td>
 						<td>
 							Temperature
