@@ -16,9 +16,11 @@ export default class Iphone extends Component {
 		super(props);
 		// temperature state
 		this.state.temp = "";
+		//this.setState({backGround: "../../assets/backgrounds/design1-iphone.png" });
 		// button display state
 		this.fetchWeatherData();
-		this.setState({onlyCurrent:false});
+		this.setState({onlyCurrent:true});
+		this.setState({settings: false})
 		this.setState({dailyTArr:["null"]});
 		this.setState({dailyWSArr:["null"]});
 		this.setState({dailyWDArr:["null"]});
@@ -30,6 +32,7 @@ export default class Iphone extends Component {
 		this.setState({hourlyTimeArr:["null"]});
 		this.setState({dailyTimeArr:["null"]});
 		this.setState({future: true});
+
 	}
 
 	// a call to fetch weather data via wunderground
@@ -37,7 +40,7 @@ export default class Iphone extends Component {
 		this.setState({future:true});
 		this.fetchWeatherData2();
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url = "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=b7c6cf33749514b71862fae6cd0bfb44";
+		var url = "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=714232075f13f00b76a74b1b6fc46eca";
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
@@ -51,7 +54,7 @@ export default class Iphone extends Component {
 	//a call to fetch future weather data
 	fetchWeatherData2 = () => {
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url = "https://api.openweathermap.org/data/2.5/onecall?lat=33.441792&lon=-94.037689&units=metric&appid=b7c6cf33749514b71862fae6cd0bfb44";
+		var url = "https://api.openweathermap.org/data/2.5/onecall?lat=51.508&lon=-0.126&units=metric&appid=714232075f13f00b76a74b1b6fc46eca";
 		$.ajax({
 			url: url,
 			dataType: "jsonp",
@@ -89,7 +92,6 @@ export default class Iphone extends Component {
 		else if(degree>=292.5 && degree<337.5){
 			return "NW"
 		}
-		
 	}
 
 	//converts speed data from m/s to mph
@@ -101,101 +103,56 @@ export default class Iphone extends Component {
 		);
 	}
 
-	//creates table for hourly forecasts
-	//convert the data from unix to human date and place in table
-	//use code below to insert time data
-	//add more data for the times 
-//	<tr>
-//		<td>
-	//		{this.state.hourlyTimeArr[1]}
-	//		{this.state.hourlyTimeArr[2]}
-	//		{this.state.hourlyTimeArr[3]}
-	//		{this.state.hourlyTimeArr[4]}
-//		</td>
-//  </tr>
+	timeConversion = (unix) => {
+		const compdateformat = new Date(unix * 1000)
+
+		const hours = compdateformat.getHours() // 10 AM
+		return(
+			hours+":00"
+		)
+	}
+	
 	ShowFutureHourly = () => {
+		const days = [1,2,3,4,5,6]
+
+		const showIcons = []
+		const showTime = []
+		const showTemp = []
+		const showWindD = []
+		const showSpeed = []
+
+		for(const number of days){
+			showIcons.push(<td> <img src = {this.state.hourlyIArr[number]}/></td>)
+		}
+		for(const number of days){
+			showTime.push(<td>{this.timeConversion(this.state.hourlyTimeArr[number])}</td>)
+		}
+		for(const number of days){
+			showTemp.push(<td>{this.state.hourlyTArr[number]}</td>)
+		}
+		for(const number of days){
+			showWindD.push(<td>{this.degdirec(this.state.hourlyWDArr[number])}</td>)
+		}
+		for(const number of days){
+			showSpeed.push(<td>{this.speedConversion(this.state.hourlyWSArr[number])}</td>)
+		}
 		return(
 			<div>
 				<table class={style.hourlyTable}>
 					<tr>
-						<td>
-							<img src = {this.state.hourlyIArr[1]}/>
-						</td>
-						<td>
-							<img src = {this.state.hourlyIArr[2]}/>
-						</td>
-						<td>
-							<img src = {this.state.hourlyIArr[3]}/>
-						</td>
-						<td>
-							<img src = {this.state.hourlyIArr[4]}/>
-						</td>
-						<td>
-							<img src = {this.state.hourlyIArr[5]}/>
-						</td>
-						<td>
-							<img src = {this.state.hourlyIArr[6]}/>
-						</td>
+						{showIcons}
 					</tr>
 					<tr>
-						<td>
-							{this.state.hourlyTArr[1]}
-						</td>
-						<td>
-							{this.state.hourlyTArr[2]}
-						</td>
-						<td>
-							{this.state.hourlyTArr[3]}
-						</td>
-						<td>
-							{this.state.hourlyTArr[4]}
-						</td>
-						<td>
-							{this.state.hourlyTArr[5]}
-						</td>
-						<td>
-							{this.state.hourlyTArr[6]}
-						</td>
+						{showTime}
 					</tr>
 					<tr>
-						<td>
-							{this.degdirec(this.state.hourlyWDArr[1])}
-						</td>
-						<td>
-							{this.degdirec(this.state.hourlyWDArr[2])}
-						</td>
-						<td>
-							{this.degdirec(this.state.hourlyWDArr[3])}
-						</td>
-						<td>
-							{this.degdirec(this.state.hourlyWDArr[4])}
-						</td>
-						<td>
-							{this.degdirec(this.state.hourlyWDArr[5])}
-						</td>
-						<td>
-							{this.degdirec(this.state.hourlyWDArr[6])}
-						</td>
+						{showTemp}
 					</tr>
 					<tr>
-						<td>
-							{this.speedConversion(this.state.hourlyWSArr[1])}
-						</td>
-						<td>
-							{this.speedConversion(this.state.hourlyWSArr[2])}
-						</td>
-						<td>
-							{this.speedConversion(this.state.hourlyWSArr[3])}
-						</td>
-						<td>
-							{this.speedConversion(this.state.hourlyWSArr[4])}	
-						</td>
-						<td>
-							{this.speedConversion(this.state.hourlyWSArr[5])}	
-						</td>
-						<td>
-							{this.speedConversion(this.state.hourlyWSArr[6])}	
-						</td>
+						{showWindD}
+					</tr>
+					<tr>
+						{showSpeed}
 					</tr>
 				</table>
 			</div>	
@@ -205,6 +162,30 @@ export default class Iphone extends Component {
 	//creates table for weather in upcoming days
 	//convert the data from unix to human date and place in table replacing the DAY1 text etc
 	ShowFutureDaily = () => {
+		const days = [1,2,3,4,5]
+
+		const showFutureData = []
+
+		for(const number of days){
+			showFutureData.push(<tr>
+				<td>
+					Day {number}
+				</td>
+				<td>
+					{this.state.dailyTArr[number]}
+				</td>
+				<td>
+					<img src = {this.state.dailyIArr[number]}/>
+				</td>
+				<td>
+					{this.speedConversion(this.state.dailyWSArr[number])}mph
+
+				</td>
+				<td>
+					{this.degdirec(this.state.dailyWDArr[number])}
+				</td>  
+			</tr>)
+		}
 		return(
 			<div>
 				<table class={style.dailyTable}>
@@ -225,101 +206,48 @@ export default class Iphone extends Component {
 							Direction
 						</td>
 					</tr>
-					<tr>
-						<td>
-							Day 1
-						</td>
-						<td>
-							{this.state.dailyTArr[1]}
-						</td>
-						<td>
-							<img src = {this.state.dailyIArr[1]}/>
-						</td>
-						<td>
-							{this.speedConversion(this.state.dailyWSArr[1])}mph
-							
-						</td>
-						<td>
-							{this.degdirec(this.state.dailyWDArr[1])}
-						</td>
-					</tr>
-					<tr>
-						<td>
-							Day 2
-						</td>
-						<td>
-							{this.state.dailyTArr[2]}
-						</td>
-						<td>
-							<img class = {style.iconDaily} src = {this.state.dailyIArr[2]}> </img>
-						</td>
-						<td>
-							{this.speedConversion(this.state.dailyWSArr[2])}mph
-						</td>
-						<td>
-							{this.degdirec(this.state.dailyWDArr[2])}
-						</td>
-					</tr>
-					<tr>
-						<td>
-							Day 3
-						</td>
-						<td>
-							{this.state.dailyTArr[3]}
-						</td>
-						<td>
-							<img src = {this.state.dailyIArr[3]}/>
-						</td>
-						<td>
-							{this.speedConversion(this.state.dailyWSArr[3])}mph
-						</td>
-						<td>
-							{this.degdirec(this.state.dailyWDArr[3])}
-						</td>
-					</tr>
-					<tr>
-						<td>
-							Day 4
-						</td>
-						<td>
-							{this.state.dailyTArr[4]}
-						</td>
-						<td>
-							<img src = {this.state.dailyIArr[4]}/>		
-						</td>
-						<td>
-							{this.speedConversion(this.state.dailyWSArr[4])}mph
-						</td>
-						<td>
-							{this.degdirec(this.state.dailyWDArr[4])}
-						</td>
-					</tr>
-					<tr>
-						<td>
-							Day 5
-						</td>
-						<td>
-							{this.state.dailyTArr[5]}
-						</td>
-						<td>
-							<img src = {this.state.dailyIArr[5]}/>
-						</td>
-						<td>
-							{this.state.dailyWSArr[5]}mph
-						</td>
-						<td>
-							{this.degdirec(this.state.dailyWDArr[5])}
-						</td>
-					</tr>
+					{showFutureData}
 				</table>
 			</div>
 		);
 	}
+/*
+	bgHandler = (image) =>{
+		this.setState({ backGround: image });
 
+	}
+*/
+	settBar = () => {
+
+		//const bg1 = "../../assets/backgrounds/clear-iphone.png";
+		//const bg2 = "../../assets/backgrounds/rain-ipad.png";
+
+		const action1 = () =>{
+			document.getElementById("container").style.backgroundImage = "url('../../assets/backgrounds/clear-iphone.jpg')";
+		}
+		const action2 = () =>{
+			document.getElementById("container").style.backgroundImage = "url('../../assets/backgrounds/rain-ipad.jpg')";
+		}
+		const action3 = () =>{
+			document.getElementById("container").style.backgroundImage = "url('../../assets/backgrounds/design1-iphone.png')";
+		}
+
+		return(
+			<div class = {style.bgChange}>
+				<h2>Settings</h2>
+				<button class= {style.bgButtons} onClick={action1} >Change Background 1</button>
+				<br/>
+				<button class= {style.bgButtons} onClick={action2} >Change Background 2</button>
+				<br/>
+				<button class= {style.bgButtons} onClick={action3}>Change Background 3</button>
+			</div>
+		)
+	}
 	//shows homepage
 	showHome = () =>{
 		this.setState({future:true})
-		this.setState({onlyCurrent:false})
+		this.setState({onlyCurrent:true})
+		this.setState({settings: false})
 	}
 
 	//shows current data only
@@ -331,17 +259,32 @@ export default class Iphone extends Component {
 
 	}
 
+	//shows settings
+	showSettings = () =>{
+		this.setState({settings:true})
+		this.setState({future:false})
+		this.setState({onlyCurrent:false})
+
+	}
+
 	// the main render method for the iphone component
 	render() {
 		// check if temperature data is fetched, if so add the sign styling to the page
 		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
 		const futureHourly = this.ShowFutureHourly();
 		const futureDaily = this.ShowFutureDaily();
+		const settingsTab = this.settBar();
 		var iconLink = this.state.dailyIArr[0];
 		// display all weather data
 		return (
 			<div class={ style.container }>
 				<div class={ style.header }>
+					<div>
+						{this.state.settings ? <button id={style.settIcon} onClick={this.showHome} ><img src = "..\..\assets\icons\favicon.png"></img></button>: <button id={style.settIcon} onClick={this.showSettings}><img src= "..\..\assets\icons\justification.png" ></img></button>}
+					</div>
+					<div>
+						{this.state.settings ? settingsTab:null}
+					</div>
 					<div class={ style.city }>{ this.state.locate }</div>
 					<div class={ style.conditions }>{ this.state.cond }</div>
 					<span class={ tempStyles }>{ this.state.temp }<img src={iconLink}></img></span>
@@ -359,8 +302,9 @@ export default class Iphone extends Component {
 					{this.state.future? futureDaily:null}
 				</div>	
 				<div>
-					{this.state.onlyCurrent? <button id={style.dropDown} onClick={this.showHome} ><img src = "..\..\assets\icons\arrowUp.png"></img></button>: null}
+					{this.state.future? null: <button id={style.dropDown} onClick={this.showHome} ><img src = "..\..\assets\icons\arrowUp.png"></img></button>}
 				</div>
+
 			</div>
 			//function below shows actual degree. 
 			//<div class={ style.city }>{ this.state.degree }</div> 
