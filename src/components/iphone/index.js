@@ -277,7 +277,7 @@ export default class Iphone extends Component {
 		var iconLink = this.state.dailyIArr[0];
 		// display all weather data
 		return (
-			<div id="container" class={ style.container }>
+			<div class={ style.container }>
 				<div class={ style.header }>
 					<div>
 						{this.state.settings ? <button id={style.settIcon} onClick={this.showHome} ><img src = "..\..\assets\icons\favicon.png"></img></button>: <button id={style.settIcon} onClick={this.showSettings}><img src= "..\..\assets\icons\justification.png" ></img></button>}
